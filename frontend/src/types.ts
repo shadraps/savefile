@@ -1,26 +1,26 @@
 export type User = {
-  user_id: number;
+  id: number;
   username: string;
-  display_name: string;
-  created_at: string;
+  displayName: string;
+  createdAt: string;
 };
 
 export type Review = {
-  review_id: number;
-  user_id: number;
+  reviewId: number;
+  userId: number;
   score: number;
   review: string;
-  created_at: string;
+  createdAt: string;
 };
 
 export type Like = {
-  user_id: number;
-  review_id: number;
-  created_at: string;
+  userId: number;
+  reviewId: number;
+  createdAt: string;
 };
 
 export type Follow = {
-  follower_id: number;
-  following_id: number;
-  created_at: string;
+  followerId: number;
+  followingId: number;
+  createdAt: string;
 };
