@@ -16,7 +16,7 @@ const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
-app.use('/games', gamesRouter);
+app.use('/api/games', gamesRouter);
 
 // 404 for any other routes not handled by the API.
 app.use((req : Request, res : Response) => {
