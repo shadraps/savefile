@@ -1,26 +1,24 @@
 import { useState } from 'react'
+import { Link } from 'react-router'
 import { supabase } from '../supabase'
 
-type LoginProps = {
-    onSignUpClick: () => void
-}
 
-export default async function Login({ onSignUpClick }: LoginProps) {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+export default async function Login() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
     
-    const { error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-    })
+  const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+  })
 
-    if (error) {
-        console.error('Error signing in:', error.message)
-    }
+  if (error) {
+      console.error('Error signing in:', error.message)
+  }
 
-    return (
-        <button type="button" onClick={onSignUpClick}>
-            Don't have an account? Sign up here!
-        </button>
-    )
+  return (
+    <Link to="/signUp">
+      Don't have an account? Sign up here!
+    </Link>
+  )
 }

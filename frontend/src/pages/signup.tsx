@@ -1,11 +1,8 @@
 import { useState } from 'react'
 import { supabase } from '../supabase'
+import { Link } from 'react-router/internal/react-server-client'
 
-type SignUpProps = {
-    onLoginClick: () => void
-}
-
-export default async function SignUp({ onLoginClick }: SignUpProps) {
+export default async function SignUp() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     
@@ -19,8 +16,8 @@ export default async function SignUp({ onLoginClick }: SignUpProps) {
     }
 
     return (
-        <button type="button" onClick={onLoginClick}>
+        <Link to="/login">
             Already have an account? Log in!
-        </button>
+        </Link>
     )
 }
