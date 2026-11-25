@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS public.example;
 CREATE TABLE IF NOT EXISTS users (
   user_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   username TEXT NOT NULL UNIQUE,
-  display_name TEXT NOT NULL, -- display_name is not unique to allow for common names
+  display_name TEXT NOT NULL, -- display_name is not unique to allow for common names.
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
