@@ -5,7 +5,6 @@ import { supabase } from './supabase';
 import Home from './pages/home';
 import SignUp from './pages/signup';
 import Login from './pages/login';
-import './App.css';
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -23,21 +22,21 @@ export default function App() {
   if (loading) {
     return <>Loading...</>;
   }
-  
+
   return (
     <Routes>
       <Route
         path="/"
-        element={session ? <Home /> : <Navigate to="/login" />}
-      />
-      <Route 
-        path="/login"
-        element={<Login />} 
+        element={session ? <Home /> : <Navigate to="/login" replace />}
       />
       <Route
-        path="/signUp"
-        element={<SignUp />}
+        path="/login"
+        element={session ? <Navigate to="/" replace /> : <Login />}
+      />
+      <Route
+        path="/signup"
+        element={session ? <Navigate to="/" replace /> : <SignUp />}
       />
     </Routes>
   )
-};
+}

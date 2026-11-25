@@ -1,23 +1,9 @@
-import { useState } from 'react'
-import { supabase } from '../supabase'
-import { Link } from 'react-router/internal/react-server-client'
+import { SignupForm } from '@/components/signup-form'
 
-export default async function SignUp() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    
-    const { error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-    })
-
-    if (error) {
-        console.error('Error signing up:', error.message)
-    }
-
-    return (
-        <Link to="/login">
-            Already have an account? Log in!
-        </Link>
-    )
+export default function SignUp() {
+  return (
+    <main className="auth-page flex min-h-svh w-full items-center justify-center bg-muted p-6 text-foreground md:p-10">
+      <div className="w-full max-w-sm"><SignupForm /></div>
+    </main>
+  )
 }

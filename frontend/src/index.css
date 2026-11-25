@@ -263,3 +263,21 @@ code {
     @apply bg-background text-foreground;}
   html {
     @apply font-sans;}}
+
+/* Let the auth blocks fill the viewport without the starter page frame. */
+#root:has(.auth-page) {
+  width: 100%;
+  border: 0;
+  text-align: left;
+}
+
+.auth-page {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  letter-spacing: normal;
+  color-scheme: light;
+}
+
+.dark .auth-page {
+  color-scheme: dark;
+}
