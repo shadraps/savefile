@@ -1,5 +1,12 @@
 BEGIN;
 
+-- Drop tables if they exist to ensure a clean slate for the schema.
+DROP TABLE IF EXISTS public.likes;
+DROP TABLE IF EXISTS public.follows;
+DROP TABLE IF EXISTS public.reviews;
+DROP TABLE IF EXISTS public.users;
+DROP TABLE IF EXISTS public.example;
+
 CREATE TABLE IF NOT EXISTS users (
   user_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   username TEXT NOT NULL UNIQUE,
@@ -10,6 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS reviews (
   review_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   user_id BIGINT NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
+  rawg_game_id BIGINT NOT NULL, -- The id returned by RAWG's game details API.
   score SMALLINT NOT NULL,
   review TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -33,6 +41,9 @@ CREATE TABLE IF NOT EXISTS follows (
 -- Support user feeds and user counts.
 CREATE INDEX IF NOT EXISTS reviews_user_created_at_idx
   ON reviews (user_id, created_at DESC, review_id DESC);
+-- Support a game's reviews, newest first, and review counts.
+CREATE INDEX IF NOT EXISTS reviews_rawg_game_created_at_idx
+  ON reviews (rawg_game_id, created_at DESC, review_id DESC);
 -- Support newest-first feeds and review counts.
 CREATE INDEX IF NOT EXISTS reviews_created_at_idx
   ON reviews (created_at DESC, review_id DESC);
