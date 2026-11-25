@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { createUser } from '@/api'
 
 export function SignupForm(props: ComponentProps<typeof Card>) {
   const [pending, setPending] = useState(false)
@@ -12,20 +13,34 @@ export function SignupForm(props: ComponentProps<typeof Card>) {
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
+    
     if (pending) return
+    
+    // Get form values
     const values = new FormData(event.currentTarget)
     const password = String(values.get('password'))
+    const username = String(values.get('username') ?? '').trim()
+    const displayName = String(values.get('display-name') ?? username).trim()
+    
     setError(null)
+
+    if (!username) {
+      setError('Enter a username.')
+      return
+    }
+    
     if (password !== values.get('confirm-password')) {
       setError('Passwords do not match.')
       return
     }
+    
     setPending(true)
+    
     try {
       const { error } = await supabase.auth.signUp({
         email: String(values.get('email')).trim(),
-        password,
-        options: { data: { full_name: String(values.get('name')).trim() } },
+        password: password,
+        options: { data: { display_name: displayName, username: username } },
       })
 
       if (error) setError(error.message)
@@ -34,6 +49,8 @@ export function SignupForm(props: ComponentProps<typeof Card>) {
     } finally {
       setPending(false)
     }
+
+    await createUser(username, displayName)
   }
 
   return (
@@ -47,8 +64,12 @@ export function SignupForm(props: ComponentProps<typeof Card>) {
           <fieldset disabled={pending} className="min-w-0">
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="signup-name">Full name</FieldLabel>
-                <Input id="signup-name" name="name" type="text" autoComplete="name" placeholder="Your name" required />
+                <FieldLabel htmlFor="signup-display-name">Display name</FieldLabel>
+                <Input id="signup-display-name" name="display-name" type="text" autoComplete="nickname" placeholder="Your display name" />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="signup-username">Username</FieldLabel>
+                <Input id="signup-username" name="username" type="text" autoComplete="username" placeholder="Your username" required />
               </Field>
               <Field>
                 <FieldLabel htmlFor="signup-email">Email</FieldLabel>

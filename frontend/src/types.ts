@@ -8,6 +8,7 @@ export type User = {
 export type Review = {
   reviewId: number;
   userId: number;
+  rawgGameId: number;
   score: number;
   review: string;
   createdAt: string;

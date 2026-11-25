@@ -13,15 +13,20 @@ export function LoginForm({ className, ...props }: ComponentProps<'div'>) {
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
+    
     if (pending) return
+    
     const values = new FormData(event.currentTarget)
-    setPending(true)
+    
     setError(null)
+    setPending(true)
+    
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email: String(values.get('email')).trim(),
         password: String(values.get('password')),
       })
+      
       if (error) setError(error.message)
     } catch {
       setError('Unable to log in. Please check your connection and try again.')
