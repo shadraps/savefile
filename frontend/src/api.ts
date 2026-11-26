@@ -1,5 +1,5 @@
 import { supabase } from "./supabase"
-import type { Review } from "./types"
+import type { Review, User } from "./types"
 
 // Base URL of the backend. Set VITE_API_URL in .env (local) or in Vercel settings (deployed).
 export const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -15,8 +15,8 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   }
 
   const res = await fetch(`${BASE_URL}${path}`, {
-    headers,
     ...options,
+    headers,
   })
 
   const data = await res.json()
@@ -26,8 +26,14 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return data
 }
 
+export async function getFollowing(): Promise<User[]> {
+  const { following } = await request<{ following: User[] }>('/api/following')
+  return following
+}
+
 export async function getFollowingReviews(): Promise<Review[]> {
-  return await request<Review[]>('/api/following/reviews')
+  const { reviews } = await request<{ reviews: Review[] }>('/api/following/reviews')
+  return reviews
 }
 
 export async function createUser(username: string, displayName: string): Promise<void> {

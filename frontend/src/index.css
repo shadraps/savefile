@@ -135,14 +135,14 @@ body {
   margin: 0;
 }
 
-h1,
-h2 {
+#root:not(:has(.app-page)) h1,
+#root:not(:has(.app-page)) h2 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);
 }
 
-h1 {
+#root:not(:has(.app-page)) h1 {
   font-size: 56px;
   letter-spacing: -1.68px;
   margin: 32px 0;
@@ -151,7 +151,7 @@ h1 {
     margin: 20px 0;
   }
 }
-h2 {
+#root:not(:has(.app-page)) h2 {
   font-size: 24px;
   line-height: 118%;
   letter-spacing: -0.24px;
@@ -265,19 +265,22 @@ code {
     @apply font-sans;}}
 
 /* Let the auth blocks fill the viewport without the starter page frame. */
-#root:has(.auth-page) {
+#root:has(.auth-page),
+#root:has(.app-page) {
   width: 100%;
   border: 0;
   text-align: left;
 }
 
-.auth-page {
+.auth-page,
+.app-page {
   font-family: var(--font-sans);
   font-size: 1rem;
   letter-spacing: normal;
   color-scheme: light;
 }
 
-.dark .auth-page {
+.dark .auth-page,
+.dark .app-page {
   color-scheme: dark;
 }
