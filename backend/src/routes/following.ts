@@ -19,20 +19,17 @@ async function getFollowingUsers(res: Response) {
     res.status(500).json({ error: profileError.message })
     return null
   }
-  if (!profile) {
-    res.status(404).json({ error: 'User profile not found.' })
-    return null
-  }
 
   const { data: follows, error: followsError } = await supabase
     .from('follows')
     .select('following_id')
-    .eq('follower_id', profile.user_id)
+    .eq('follower_id', profile!.user_id)
 
   if (followsError) {
     res.status(500).json({ error: followsError.message })
     return null
   }
+
   if (!follows?.length) return []
 
   const { data: users, error: usersError } = await supabase
@@ -52,14 +49,17 @@ async function getFollowingUsers(res: Response) {
 
 router.get('/', async (_req, res) => {
   const following = await getFollowingUsers(res)
-  if (following === null) return
+  
+  if (!following) return
+
   return res.json({ following })
 })
 
 router.get('/reviews', async (_req, res) => {
   const following = await getFollowingUsers(res)
-  if (following === null) return
-  if (following.length === 0) return res.json({ reviews: [] })
+  
+  if (!following) return
+  if (!following.length) return res.json({ reviews: [] })
 
   const { data: reviews, error } = await supabase
     .from('reviews')
