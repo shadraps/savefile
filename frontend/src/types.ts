@@ -25,3 +25,10 @@ export type Follow = {
   following_id: number;
   created_at: string;
 };
+
+export type Profile = {
+  user: User
+  reviews: Review[]
+  followingCount: number
+  followerCount: number
+}
