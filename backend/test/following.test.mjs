@@ -76,7 +76,7 @@ test('resolves the viewer ID and returns complete followed records unchanged', a
   ])
 })
 test('restricts reviews to followed IDs, orders newest first, and returns complete review records', async () => {
-  const row = { review_id: 3, user_id: 7, rawg_game_id: 4200, score: 9, review: 'Great puzzles.', created_at: '2026-11-25T18:00:00Z' }
+  const row = { review_id: 3, user_id: 7, game_name: 'Portal 2', score: 9, review: 'Great puzzles.', created_at: '2026-11-25T18:00:00Z' }
   seed(ok({ user_id: 42 }), ok([{ following_id: 7 }]), ok([authorRow]), ok([row]))
   assert.deepEqual(await request('/reviews'), {
     status: 200,
@@ -102,7 +102,7 @@ test('preserves additional database attributes on users and reviews', async () =
   seed(ok({ user_id: 42 }), ok([{ following_id: 7 }]), ok([fullAuthor]))
   assert.deepEqual(await request(), { status: 200, body: { following: [fullAuthor] } })
 
-  const fullReview = { review_id: 3, user_id: 7, rawg_game_id: 4200, score: 9, review: 'Great puzzles.', created_at: '2026-11-25T18:00:00Z', contains_spoilers: false }
+  const fullReview = { review_id: 3, user_id: 7, game_name: 'Portal 2', score: 9, review: 'Great puzzles.', created_at: '2026-11-25T18:00:00Z', contains_spoilers: false }
   seed(ok({ user_id: 42 }), ok([{ following_id: 7 }]), ok([fullAuthor]), ok([fullReview]))
   assert.deepEqual(await request('/reviews'), {
     status: 200, body: { reviews: [fullReview] },

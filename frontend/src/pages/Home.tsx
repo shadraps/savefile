@@ -32,6 +32,7 @@ export default function Home() {
   }, [attempt])
 
   if (loading) return <p role="status" className="text-sm text-muted-foreground">Loading your following feed…</p>
+  
   if (error) return (
     <div role="alert" className="space-y-3 rounded-xl border p-6">
       <p className="text-sm text-destructive">{error}</p>
@@ -43,7 +44,7 @@ export default function Home() {
     </div>
   )
 
-  const authors = new Map(following.map((user) => [user.user_id, user]))
+  const authors: Map<number, User> = new Map(following.map((user) => [user.user_id, user]))
 
   return (
     <div className="grid items-start gap-8 md:grid-cols-[260px_minmax(0,1fr)]">
@@ -58,7 +59,7 @@ export default function Home() {
         {reviews.length > 0 ? (
           <ul className="space-y-4">
             {reviews.map((review) => (
-              <li key={review.review_id}><ReviewCard review={review} author={authors.get(review.user_id)} /></li>
+              <li key={review.review_id}><ReviewCard review={review} author={authors.get(review.user_id)!} /></li>
             ))}
           </ul>
         ) : (

@@ -7,7 +7,7 @@ const router = Router()
 async function getFollowingUsers(res: Response) {
   const user: User = res.locals.user
 
-  const username = user.user_metadata.username
+  const username: string = user.user_metadata.username
 
   const { data: profile, error: profileError } = await supabase
     .from('users')

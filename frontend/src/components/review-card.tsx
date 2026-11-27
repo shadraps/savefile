@@ -5,14 +5,15 @@ import type { Review, User } from '@/types'
 
 const dateFormatter = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
 
-export function ReviewCard({ review, author }: { review: Review; author?: User }) {
-  const gameTitle = `Game #${review.rawg_game_id}`
-  const authorName = author?.display_name ?? 'Unknown user'
+export function ReviewCard({ review, author }: { review: Review; author: User }) {
+  const gameTitle: string = review.game_name
+  const authorName: string = author.display_name
+  
   return (
     <article aria-label={`${authorName}'s review of ${gameTitle}`}>
       <Card>
         <CardHeader className="flex flex-row items-center gap-3">
-          {author && <UserInitials user={author} />}
+          <UserInitials user={author} />
           <div className="min-w-0 flex-1">
             <p className="truncate font-medium">{authorName}</p>
             {author && <p className="truncate text-xs text-muted-foreground">@{author.username}</p>}
