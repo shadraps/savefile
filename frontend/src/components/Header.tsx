@@ -36,7 +36,7 @@ export default function Header({ onSearch }: HeaderProps) {
           <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Gamepad2 className="size-5" aria-hidden="true" />
           </span>
-          Savefile
+          SaveFile
         </Link>
 
         <form

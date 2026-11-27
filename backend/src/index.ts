@@ -19,6 +19,7 @@ export const RAWG_API_KEY = process.env.RAWG_API_KEY
 const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
   .split(',')
   .map((origin) => origin.trim())
+
 export async function requireAuth(
   req: Request,
   res: Response<unknown, { user: User }>,

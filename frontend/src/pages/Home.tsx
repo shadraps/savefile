@@ -13,22 +13,17 @@ export default function Home() {
   const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
-    let active = true
-
     Promise.all([getFollowing(), getFollowingReviews()])
       .then(([users, feed]) => {
-        if (!active) return
         setFollowing(users)
         setReviews(feed)
       })
-      .catch((error: unknown) => {
-        if (active) setError(error instanceof Error ? error.message : 'Unable to load your feed.')
+      .catch((error: Error) => {
+        setError(error.message)
       })
       .finally(() => {
-        if (active) setLoading(false)
+        setLoading(false)
       })
-
-    return () => { active = false }
   }, [attempt])
 
   if (loading) return <p role="status" className="text-sm text-muted-foreground">Loading your following feed…</p>
@@ -36,6 +31,7 @@ export default function Home() {
   if (error) return (
     <div role="alert" className="space-y-3 rounded-xl border p-6">
       <p className="text-sm text-destructive">{error}</p>
+      
       <Button variant="outline" onClick={() => {
         setLoading(true)
         setError(null)
@@ -51,11 +47,13 @@ export default function Home() {
       <aside aria-label="People you follow" className="md:sticky md:top-6">
         <FollowingCard users={following} />
       </aside>
+
       <section aria-labelledby="feed-title" className="min-w-0 space-y-5">
         <div>
           <h1 id="feed-title" className="m-0 text-2xl font-semibold tracking-tight">Following reviews</h1>
           <p className="mt-1 text-sm text-muted-foreground">The latest reviews from people you follow. Newest first.</p>
         </div>
+
         {reviews.length > 0 ? (
           <ul className="space-y-4">
             {reviews.map((review) => (
