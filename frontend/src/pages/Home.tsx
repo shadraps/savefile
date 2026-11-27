@@ -13,17 +13,31 @@ export default function Home() {
   const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
+    let ignore: boolean = false
+
+    // This packages `getFollowing()` and `getFollowingReviews()` into the same `Promise`.
     Promise.all([getFollowing(), getFollowingReviews()])
       .then(([users, feed]) => {
+        if (ignore) return
+        
         setFollowing(users)
         setReviews(feed)
       })
-      .catch((error: Error) => {
-        setError(error.message)
+      .catch((error: unknown) => {
+        if (ignore) return
+        
+        setError(error instanceof Error ? error.message : 'Unable to load your feed')
       })
       .finally(() => {
+        if (ignore) return
+        
         setLoading(false)
       })
+    
+    // Cleanup function. This stops stale requests from overwriting more recent, already finished, requests.
+    return () => {
+      ignore = true
+    }
   }, [attempt])
 
   if (loading) return <p role="status" className="text-sm text-muted-foreground">Loading your following feed…</p>
@@ -32,6 +46,7 @@ export default function Home() {
     <div role="alert" className="space-y-3 rounded-xl border p-6">
       <p className="text-sm text-destructive">{error}</p>
       
+      {/* Let the user retry getting the info for the homepage*/}
       <Button variant="outline" onClick={() => {
         setLoading(true)
         setError(null)
