@@ -1,5 +1,5 @@
 import { supabase } from "./supabase"
-import type { Profile, Review, User } from "./types"
+import type { Game, Profile, Review, User } from "./types"
 
 // Base URL of the backend. Set VITE_API_URL in .env (local) or in Vercel settings (deployed).
 export const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -10,9 +10,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const headers = new Headers(options?.headers)
   headers.set('Content-Type', 'application/json')
   
-  if (session) {
-    headers.set('Authorization', `Bearer ${session.access_token}`)
-  }
+  if (session) headers.set('Authorization', `Bearer ${session.access_token}`)
 
   const res = await fetch(`${BASE_URL}${path}`, {
     ...options,
@@ -46,4 +44,9 @@ export async function createUser(username: string, displayName: string): Promise
 export async function getProfile(username: string): Promise<Profile> {
   const { user, reviews, followingCount, followerCount } = await request<{ user: User, reviews: Review[], followingCount: number, followerCount: number}>(`/api/users/${username}`)
   return { user, reviews, followingCount, followerCount }
+}
+
+export async function getSearch(query: string): Promise<Game[]> {
+  const { results } = await request<{ results: Game[] }>(`/api/games/search/${query}`)
+  return results
 }

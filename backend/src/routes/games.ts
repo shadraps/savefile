@@ -1,30 +1,46 @@
-import { Router, type Request, type Response } from 'express';
-import { RAWG_BASE_URL, RAWG_API_KEY } from '../index.ts';
+import { Router, type Request, type Response } from 'express'
+import { RAWG_BASE_URL, RAWG_API_KEY } from '../index.ts'
 
-const router = Router();
+const router = Router()
 
-// GET /games/:game
-router.get("/:game", async (req : Request, res : Response) => {
-    const game = String(req.params.game);
+router.get("/:game", async (req: Request, res: Response) => {
+    const game = String(req.params.game)
 
-    if (!RAWG_API_KEY) {
-        return res.status(500).json({ error: "RAWG_API_KEY is missing from the backend environment" });
-    }
+    if (!RAWG_API_KEY) return res.status(500).json({ error: "RAWG_API_KEY is missing from the backend environment" })
 
-    const url = new URL(`${RAWG_BASE_URL}/${encodeURIComponent(game)}`);
-    url.searchParams.set('key', RAWG_API_KEY);
+    const url = new URL(`${RAWG_BASE_URL}/${encodeURIComponent(game)}`)
+    url.searchParams.set('key', RAWG_API_KEY)
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(url)
 
-        if (!response.ok) {
-            return res.status(response.status).json({ error: `Failed to fetch game data: ${response.status}${response.statusText ? ` ${response.statusText}` : ''}` });
-        }
+        if (!response.ok) return res.status(response.status).json({ error: `Failed to fetch game data: ${response.status}${response.statusText ? ` ${response.statusText}` : ''}` })
 
-        return res.json(await response.json());
+        return res.json(await response.json())
     } catch (error) {
-        return res.status(502).json({ error: "Could not reach RAWG" });
+        return res.status(502).json({ error: "Could not reach RAWG" })
     }
-});
+})
+
+router.get("/search/:search", async (req: Request, res: Response) => {
+    const search = String(req.params.search)
+
+    if (!RAWG_API_KEY) return res.status(500).json({ error: "RAWG_API_KEY is missing from the backend environment" })
+    
+    const url = new URL(`${RAWG_BASE_URL}`)
+    url.searchParams.set('key', RAWG_API_KEY)
+    url.searchParams.set('search', search)
+    url.searchParams.set('page_size', '5')
+
+    try {
+        const response = await fetch(url)
+
+        if (!response.ok) return res.status(response.status).json({ error: `Search failed: ${response.status}${response.statusText ? ` ${response.statusText}` : ''}`})
+        
+        return res.json(await response.json())
+    } catch (error: unknown) {
+        return res.status(502).json({ error: "Could not reach RAWG" })
+    }
+})
 
 export default router;
